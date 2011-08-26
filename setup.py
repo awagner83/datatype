@@ -5,6 +5,7 @@ setup(
     name='datatype',
     version='0.1',
     description='Anonymous datatype validation',
-    packages=find_packages()
+    packages=find_packages(),
+    install_requires=['pytest', 'pytest-cov']
 )
 

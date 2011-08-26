@@ -72,7 +72,7 @@ def _parse_dict_key(key):
 
     Example:
         >>> _parse_dict_key("optional foo")
-        ("foo", ["optional"])
+        ('foo', ['optional'])
     """
     key_words = iter(key.split(' '))
     options = []
