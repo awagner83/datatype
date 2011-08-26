@@ -8,12 +8,12 @@ Datatype definitions are represented with a small set of types that should be
 built-in for *most* languages.
 
 Required types for proper validation:
- - int
- - float
- - string
- - boolean
- - dictionary (or anonymous object)
- - list (or array)
+ * int
+ * float
+ * string
+ * boolean
+ * dictionary (or anonymous object)
+ * list (or array)
 
 Specification
 -------------
