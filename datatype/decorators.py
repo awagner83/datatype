@@ -1,0 +1,30 @@
+from datatype.validation import failures
+
+
+class BadReturnValueError(Exception):
+    """Raised when `returns` decorator encounters a return value
+    not matching it's given datatype."""
+
+    # List of things that went wrong in validation
+    failures = []
+
+
+def returns(dfn):
+    """Make decorators to watch return values of functions to ensure
+    they match the given datatype definition."""
+    def decorator(fn):
+        def wrapped_function(*args, **kwargs):
+            ret = fn(*args, **kwargs)
+
+            # Check for failure and raise
+            fails = failures(dfn, ret)
+            if fails:
+                ex = BadReturnValueError()
+                ex.failures = fails
+                raise ex
+
+            # All is well, return as usual
+            return ret
+        return wrapped_function
+    return decorator
+
