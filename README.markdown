@@ -28,12 +28,12 @@ Specification
 Definition Examples (in python):
 --------------------------------
 
-definition: "int"
-example value: 5
+    definition: "int"
+    example value: 5
 
-definition: {"foo": "int"}
-example value: {"foo": 5}
+    definition: {"foo": "int"}
+    example value: {"foo": 5}
 
-definition: [{"foo": ["bool"]}]
-example value: [{"foo": [True, False]}, {"foo": [False, False]}]
+    definition: [{"foo": ["bool"]}]
+    example value: [{"foo": [True, False]}, {"foo": [False, False]}]
 
