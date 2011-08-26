@@ -8,12 +8,14 @@ Datatype definitions are represented with a small set of types that should be
 built-in for *most* languages.
 
 Required types for proper validation:
- * int
- * float
- * string
- * boolean
- * dictionary (or anonymous object)
- * list (or array)
+
+* int
+* float
+* string
+* boolean
+* dictionary (or anonymous object)
+* list (or array)
+
 
 Specification
 -------------
@@ -24,6 +26,7 @@ Specification
     DICTIONARY-KEY = ["optional "] + DICTIONARY-KEY-NAME
     DICTIONARY-KEY-NAME = [A-Za-z0-9_]+
     LIST = [PRIMITIVE|DICTIONARY|LIST]
+
 
 Definition Examples (in python):
 --------------------------------
