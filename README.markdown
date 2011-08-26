@@ -40,3 +40,12 @@ Definition Examples (in python):
     definition: [{"foo": ["bool"]}]
     example value: [{"foo": [True, False]}, {"foo": [False, False]}]
 
+
+Copyright and License
+---------------------
+
+Copyright 2011 LearningStation, Inc.
+
+Licensed under the BSD-3 License.  You may obtain a copy of the License in the
+LICENSE file.
+
