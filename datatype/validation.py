@@ -32,8 +32,11 @@ def failures(datatype, value, path=''):
                     ))
 
     # List Validation
-    elif dt_type == list:
-        raise NotImplementedError
+    elif dt_type == list and len(datatype) == 1:
+        subtype = datatype[0]
+        for idx, subval in enumerate(value):
+            subpath = _joinpaths(path, '[%d]' % idx)
+            fails.extend(failures(subtype, subval, subpath))
 
     # The great undefined!
     else:
