@@ -54,6 +54,16 @@ def test_failures_bad_definition():
     assert raises(BadDatatypeDefinitionError, failures, datatype, None)
 
 
+def test_failures_list():
+    datatype = ['str']
+    assert failures(datatype, ['foo', 'bar', 'baz']) == []
+
+
+def test_failures_list_failure():
+    datatype = ['str']
+    assert failures(datatype, ['a', 'b', 3]) == ['[2]: expected str, got int']
+
+
 def test_failures_optional():
     datatype = {
             'foo': 'int',
