@@ -20,12 +20,12 @@ Required types for proper validation:
 Specification
 -------------
 
-    DEFINITION = PRIMITIVE|LIST|DICTIONARY
+    DEFINITION = PRIMITIVE | LIST | DICTIONARY
     PRIMITIVE = "int" | "str" | "float" | "bool"
-    DICTIONARY = {DICTIONARY-KEY: PRIMITIVE|DICTIONARY|LIST}
+    DICTIONARY = {DICTIONARY-KEY: DEFINITION}
     DICTIONARY-KEY = ["optional "] + DICTIONARY-KEY-NAME
     DICTIONARY-KEY-NAME = [A-Za-z0-9_]+
-    LIST = [PRIMITIVE|DICTIONARY|LIST]
+    LIST = [DEFINITION]
 
 
 Definition Examples (in python):
