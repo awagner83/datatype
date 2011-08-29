@@ -11,7 +11,16 @@ class BadReturnValueError(Exception):
 
 def returns(dfn):
     """Make decorators to watch return values of functions to ensure
-    they match the given datatype definition."""
+    they match the given datatype definition.
+
+    Example:
+        >>> @returns('int')
+        ... def myfunction():
+        ...     return "bad return value"
+        >>> myfunction()
+        Traceback (most recent call last):
+        BadReturnValueError
+    """
     def decorator(fn):
         def wrapped_function(*args, **kwargs):
             ret = fn(*args, **kwargs)
