@@ -46,6 +46,13 @@ def test_failures_object_unexpected_property():
     assert failures(datatype, value) == expected
 
 
+def test_failures_object_bad_value():
+    datatype = {}
+    value = 5
+    expected = ['expected dict, got int']
+    assert failures(datatype, value) == expected
+
+
 def test_failures_multiple():
     datatype = {'foo': 'int', 'bar': 'int', 'bif': 'str'}
     value = {'foo': 'a', 'bar': 5, 'bif': 1.0}

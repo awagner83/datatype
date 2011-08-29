@@ -6,11 +6,11 @@ class BadDatatypeDefinitionError(Exception):
 
 def failures(datatype, value, path=''):
     dt_type = type(datatype)
+    val_type = type(value)
     fails = []
 
     # Primitives Validation
     if dt_type == str:
-        val_type = type(value)
         req_type = _primitives[datatype]
         if val_type != req_type:
             fails.append(_failure(path,
@@ -20,21 +20,25 @@ def failures(datatype, value, path=''):
 
     # Object Validation
     elif dt_type == dict:
-        all_properties = set()
-        for key, subtype in datatype.iteritems():
-            key, options = _parse_dict_key(key)
-            all_properties.add(key)
-            subpath = _joinpaths(path, key, '.')
-            try:
-                fails.extend(failures(subtype, value[key], subpath))
-            except (KeyError):
-                if 'optional' not in options:
-                    fails.append(_failure(path,
-                        'missing required property: "%s"', key
-                    ))
-        # check for unexpected properties/keys
-        fails.extend(_failure(path, 'unexpected property "%s"', x)
-                     for x in set(value.keys()) - all_properties)
+        if val_type != dict:
+            fails.append(_failure(
+                path, 'expected dict, got %s', val_type.__name__))
+        else:
+            all_properties = set()
+            for key, subtype in datatype.iteritems():
+                key, options = _parse_dict_key(key)
+                all_properties.add(key)
+                subpath = _joinpaths(path, key, '.')
+                try:
+                    fails.extend(failures(subtype, value[key], subpath))
+                except (KeyError):
+                    if 'optional' not in options:
+                        fails.append(_failure(path,
+                            'missing required property: "%s"', key
+                        ))
+            # check for unexpected properties/keys
+            fails.extend(_failure(path, 'unexpected property "%s"', x)
+                         for x in set(value.keys()) - all_properties)
 
     # List Validation
     elif dt_type == list and len(datatype) == 1:
