@@ -22,6 +22,11 @@ def test_failures_unicode_is_str():
     assert failures('str', u'foo') == []
 
 
+def test_failures_nullable():
+    assert failures('nullable int', None) == []
+    assert failures('int', None) == ['unexpected null for non-nullable type']
+
+
 def test_failures_object_missing_property():
     expected = ['missing required property: "foo"']
     assert failures({'foo': 'int'}, {}) == expected
