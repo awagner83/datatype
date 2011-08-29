@@ -1,7 +1,22 @@
 datatype - Anonymous datatype validation
 ========================================
 
-Datatype definitions
+Example:
+--------
+
+```python
+
+>>> from datatype.validation import failures
+
+>>> datatype = {'foo': [{'bar': 'int'}]}
+>>> bad_value = {'foo': [{'bar': 'baz'}], 'bif': 'pow!'}
+
+>>> failures(datatype, bad_value)
+['foo[0].bar: expected int, got str', 'unexpected property "bif"']
+
+```
+
+Datatype Definitions
 --------------------
 
 Datatype definitions are represented with a small set of types that should be
