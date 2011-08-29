@@ -1,10 +1,27 @@
+"""Datatype validation module.
 
+Provides:
+    `failures`: Returns list of a values validation failures.
+    `is_valid`: Returns boolean value representing validity of a value.
+"""
 
 class BadDatatypeDefinitionError(Exception):
     """Raised when trying to validate with a bad datatype definition."""
 
 
 def failures(datatype, value, path=''):
+    """Return list of failures (if any) validating `value` again `datatype`.
+
+    Params:
+        `datatype`: Datatype to validate value against.  See README.markdown
+            for examples.
+        `value`: Value to validate
+        `path`: Used internally for location of failures.
+
+    Example:
+        >>> failures('int', 'foo')
+        ['expected int, got str']
+    """
     dt_type = type(datatype)
     val_type = type(value)
     fails = []
@@ -55,6 +72,7 @@ def failures(datatype, value, path=''):
 
 
 def is_valid(datatype, value):
+    """Return boolean representing validity of `value` against `datatype`."""
     return not failures(datatype, value)
 
 
