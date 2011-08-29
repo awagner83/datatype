@@ -5,6 +5,9 @@ Provides:
     `is_valid`: Returns boolean value representing validity of a value.
 """
 
+from functools import partial
+
+
 class BadDatatypeDefinitionError(Exception):
     """Raised when trying to validate with a bad datatype definition."""
 
@@ -28,8 +31,13 @@ def failures(datatype, value, path=''):
 
     # Primitives Validation
     if dt_type == str:
+        datatype, options = _parse_primitive(datatype)
         req_type = _primitives[datatype]
-        if val_type not in req_type:
+        if value is None:
+            if 'nullable' not in options:
+                fails.append(_failure(path,
+                    'unexpected null for non-nullable type'))
+        elif val_type not in req_type:
             fails.append(_failure(path,
                 'expected %s, got %s',
                 req_type[0].__name__, val_type.__name__
@@ -92,24 +100,22 @@ def _failure(path, error, *replacements):
     return "%s: %s" % (path, error) if path else error
 
 
-_dict_key_options = [
-        'optional'
-    ]
-
-
-def _parse_dict_key(key):
+def _parse_name_options(key, possible_options):
     """Pull dictionary key options from key and return both as tuple.
 
     Example:
-        >>> _parse_dict_key("optional foo")
+        >>> _parse_name_options("optional foo", ['optional'])
         ('foo', ['optional'])
     """
     key_words = iter(key.split(' '))
     options = []
     for word in key_words:
-        if word in _dict_key_options and word not in options:
+        if word in possible_options and word not in options:
             options.append(word)
         else:
             return (' '.join([word] + list(key_words)), options)
 
+
+_parse_dict_key = partial(_parse_name_options, possible_options=['optional'])
+_parse_primitive = partial(_parse_name_options, possible_options=['nullable'])
 

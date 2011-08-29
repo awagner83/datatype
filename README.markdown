@@ -36,7 +36,7 @@ Specification
 -------------
 
     DEFINITION = PRIMITIVE | LIST | DICTIONARY
-    PRIMITIVE = "int" | "str" | "float" | "bool"
+    PRIMITIVE = ["nullable "] + ("int" | "str" | "float" | "bool")
     DICTIONARY = {DICTIONARY-KEY: DEFINITION}
     DICTIONARY-KEY = ["optional "] + DICTIONARY-KEY-NAME
     DICTIONARY-KEY-NAME = [A-Za-z0-9_]+
