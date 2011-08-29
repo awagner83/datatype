@@ -39,6 +39,13 @@ def test_failures_object_nested():
     assert failures(datatype, value) == expected
 
 
+def test_failures_object_unexpected_property():
+    datatype = {}
+    value = {'foo': 'bar'}
+    expected = ['unexpected property "foo"']
+    assert failures(datatype, value) == expected
+
+
 def test_failures_multiple():
     datatype = {'foo': 'int', 'bar': 'int', 'bif': 'str'}
     value = {'foo': 'a', 'bar': 5, 'bif': 1.0}
