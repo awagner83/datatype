@@ -29,10 +29,10 @@ def failures(datatype, value, path=''):
     # Primitives Validation
     if dt_type == str:
         req_type = _primitives[datatype]
-        if val_type != req_type:
+        if val_type not in req_type:
             fails.append(_failure(path,
                 'expected %s, got %s',
-                req_type.__name__, val_type.__name__
+                req_type[0].__name__, val_type.__name__
             ))
 
     # Object Validation
@@ -77,10 +77,10 @@ def is_valid(datatype, value):
 
 
 _primitives = {
-        'int':   int,
-        'float': float,
-        'str':   str,
-        'bool':  bool
+        'int':   (int,),
+        'float': (float,),
+        'str':   (str, unicode),
+        'bool':  (bool,)
     }
 
 def _joinpaths(p1, p2, delim=None):

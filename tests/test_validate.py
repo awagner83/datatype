@@ -18,6 +18,10 @@ def test_failures_primitive():
     assert failures('int', '5') == ['expected int, got str']
 
 
+def test_failures_unicode_is_str():
+    assert failures('str', u'foo') == []
+
+
 def test_failures_object_missing_property():
     expected = ['missing required property: "foo"']
     assert failures({'foo': 'int'}, {}) == expected
