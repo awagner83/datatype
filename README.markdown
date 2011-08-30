@@ -16,6 +16,18 @@ Example:
 
 ```
 
+Wildcard dictionary keys:
+
+```python
+
+>>> datatype = {'_any_': ['int']}
+>>> good_value = {'foo': [1, 2, 3], 'bar': [3, 4, 5]}
+
+>>> failures(datatype, good_value)
+[]
+
+```
+
 Datatype Definitions
 --------------------
 
@@ -54,6 +66,9 @@ Definition Examples (in python):
 
     definition: [{"foo": ["bool"]}]
     example value: [{"foo": [True, False]}, {"foo": [False, False]}]
+
+    definition: {"_any_": "int"}
+    example value: {"foo": 5, "bar": 7}
 
 
 Copyright and License
