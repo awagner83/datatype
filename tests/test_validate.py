@@ -48,6 +48,14 @@ def test_failures_object_nested():
     assert failures(datatype, value) == expected
 
 
+def test_failures_object_arbitrary_key():
+    datatype = {'_any_': 'int'}
+    good_value = {'foo': 5, 'bar': 6, 'baz': 7}
+    bad_balue = {'foo': 'five'}
+    assert failures(datatype, good_value) == []
+    assert failures(datatype, bad_balue) == ['foo: expected int, got str']
+
+
 def test_failures_object_unexpected_property():
     datatype = {}
     value = {'foo': 'bar'}
