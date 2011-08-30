@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='datatype',
-    version='0.3',
+    version='0.4',
     description='Anonymous datatype validation',
     packages=find_packages(),
     install_requires=['pytest', 'pytest-cov'],
