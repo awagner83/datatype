@@ -29,5 +29,5 @@ def test_returns_function_meta():
         return 5
 
     assert my_function.__name__ == 'my_function'
-    assert my_function.__doc__ == 'My Docs'
+    assert my_function.__doc__ == "My Docs\n\nReturn datatype:\n    'int'"
 

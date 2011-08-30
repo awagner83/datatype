@@ -1,6 +1,7 @@
 from functools import wraps
 
 from datatype.validation import failures
+from datatype.docgen import add_docs
 
 
 class BadReturnValueError(Exception):
@@ -24,6 +25,10 @@ def returns(dfn):
         BadReturnValueError
     """
     def decorator(fn):
+
+        # Add return-datatype info to function doc-block
+        add_docs(fn, dfn)
+
         @wraps(fn)
         def wrapped_function(*args, **kwargs):
             ret = fn(*args, **kwargs)
