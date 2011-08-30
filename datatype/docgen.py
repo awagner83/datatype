@@ -16,7 +16,7 @@ def add_docs(fn, datatype):
 def gendocs(datatype, width=80):
     width -= 4
     return ('Return datatype:\n%s'
-            % indent(pformat(datatype, width=width, indent=4)))
+            % indent(pformat(datatype, width=width)))
 
 
 def indent(string, indent_level=4):
@@ -27,10 +27,12 @@ def indent(string, indent_level=4):
 
 def getindent(string):
     try:
-        indent_levels = (nspaces(x) for x in string.splitlines())
-    except AttributeError:
+        indent_levels = (nspaces(x) for x in string.splitlines() if x)
+        return min(ifilter(lambda x: x != 0, indent_levels)) or 0
+    except (AttributeError, ValueError):
+        # Things that don't look like strings and strings with no
+        # indentation should report indentation of 0
         return 0
-    return min(ifilter(lambda x: x == 0, indent_levels))
 
 
 def nspaces(line):
