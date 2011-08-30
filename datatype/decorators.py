@@ -1,3 +1,5 @@
+from functools import wraps
+
 from datatype.validation import failures
 
 
@@ -22,6 +24,7 @@ def returns(dfn):
         BadReturnValueError
     """
     def decorator(fn):
+        @wraps(fn)
         def wrapped_function(*args, **kwargs):
             ret = fn(*args, **kwargs)
 

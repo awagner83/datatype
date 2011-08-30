@@ -21,3 +21,13 @@ def test_returns_failure():
     assert ex
     assert ex.value.failures == ['expected bool, got int']
 
+
+def test_returns_function_meta():
+    @returns('int')
+    def my_function():
+        """My Docs"""
+        return 5
+
+    assert my_function.__name__ == 'my_function'
+    assert my_function.__doc__ == 'My Docs'
+
