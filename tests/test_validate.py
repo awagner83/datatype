@@ -95,6 +95,18 @@ def test_failures_list_failure():
     assert failures(datatype, ['a', 'b', 3]) == ['[2]: expected str, got int']
 
 
+def test_failures_tuple():
+    datatype = ['str', 'int']
+    assert failures(datatype, ['foo', 5]) == []
+
+
+def test_failures_tuple_failure():
+    datatype = ['str', 'int']
+    assert failures(datatype, ['foo']) == ['missing required value at index 1']
+    assert failures(datatype, ['foo', 5, True]
+            ) == ['unexpected value at index 2']
+
+
 def test_failures_optional():
     datatype = {
             'foo': 'int',

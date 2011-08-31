@@ -82,6 +82,20 @@ def failures(datatype, value, path=''):
             subpath = _joinpaths(path, '[%d]' % idx)
             fails.extend(failures(subtype, subval, subpath))
 
+    # Tuple Validation
+    elif dt_type == list and len(datatype) > 1:
+        for idx, subtype in enumerate(datatype):
+            subpath = _joinpaths(path, '[%d]' % idx)
+            try:
+                fails.extend(failures(subtype, value[idx], subpath))
+            except IndexError:
+                fails.append(_failure(path,
+                    'missing required value at index %d', idx))
+
+        # Check for unexpected items
+        fails.extend(_failure(path, 'unexpected value at index %d' % x)
+                for x in xrange(len(datatype), len(value)))
+
     # The great undefined!
     else:
         raise BadDatatypeDefinitionError(datatype)

@@ -49,6 +49,7 @@ Specification
     DICTIONARY-KEY = (["optional "] + DICTIONARY-KEY-NAME) | "_any_"
     DICTIONARY-KEY-NAME = [A-Za-z0-9_]+
     LIST = (list of one) DEFINITION
+    TUPLE = (list of more than one) DEFINITION
 
 
 Definition Examples (in python)
@@ -66,6 +67,9 @@ Definition Examples (in python)
 
     definition: {"_any_": "int"}
     example value: {"foo": 5, "bar": 7}
+
+    definition: ["int", "str"]
+    example value: [5, "foo"]
 
 
 Copyright and License
