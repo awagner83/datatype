@@ -12,6 +12,11 @@ class BadDatatypeDefinitionError(Exception):
     """Raised when trying to validate with a bad datatype definition."""
 
 
+def is_valid(datatype, value):
+    """Return boolean representing validity of `value` against `datatype`."""
+    return not failures(datatype, value)
+
+
 def failures(datatype, value, path=''):
     """Return list of failures (if any) validating `value` again `datatype`.
 
@@ -45,35 +50,7 @@ def failures(datatype, value, path=''):
 
     # Object Validation
     elif dt_type == dict:
-        if val_type != dict:
-            fails.append(_failure(
-                path, 'expected dict, got %s', val_type.__name__))
-        else:
-            wildcard = datatype.get('_any_', None)
-            all_properties = set()
-            for key, subtype in datatype.iteritems():
-                if key == '_any_':
-                    continue
-                key, options = _parse_dict_key(key)
-                all_properties.add(key)
-                subpath = _joinpaths(path, key, '.')
-                try:
-                    fails.extend(failures(subtype, value[key], subpath))
-                except (KeyError):
-                    if 'optional' not in options:
-                        fails.append(_failure(path,
-                            'missing required property: "%s"', key
-                        ))
-
-            if wildcard:
-                # validate wildcard items
-                for key, subvalue in value.iteritems():
-                    subpath = _joinpaths(path, key, '.')
-                    fails.extend(failures(wildcard, subvalue, subpath))
-            else:
-                # check for unexpected properties/keys
-                fails.extend(_failure(path, 'unexpected property "%s"', x)
-                             for x in set(value.keys()) - all_properties)
+        fails.extend(_validate_dictionary(datatype, value, path))
 
     # List Validation
     elif dt_type == list and len(datatype) == 1:
@@ -103,9 +80,40 @@ def failures(datatype, value, path=''):
     return fails
 
 
-def is_valid(datatype, value):
-    """Return boolean representing validity of `value` against `datatype`."""
-    return not failures(datatype, value)
+def _validate_dictionary(datatype, value, path):
+    val_type = type(value)
+
+    if val_type != dict:
+        return [_failure(path, 'expected dict, got %s', val_type.__name__)]
+
+    fails = []
+    wildcard = datatype.get('_any_', None)
+    all_properties = set()
+    for key, subtype in datatype.iteritems():
+        if key == '_any_':
+            continue
+        key, options = _parse_dict_key(key)
+        all_properties.add(key)
+        subpath = _joinpaths(path, key, '.')
+        try:
+            fails.extend(failures(subtype, value[key], subpath))
+        except (KeyError):
+            if 'optional' not in options:
+                fails.append(_failure(path,
+                    'missing required property: "%s"', key
+                ))
+
+    if wildcard:
+        # validate wildcard items
+        for key, subvalue in value.iteritems():
+            subpath = _joinpaths(path, key, '.')
+            fails.extend(failures(wildcard, subvalue, subpath))
+    else:
+        # check for unexpected properties/keys
+        fails.extend(_failure(path, 'unexpected property "%s"', x)
+                     for x in set(value.keys()) - all_properties)
+
+    return fails
 
 
 _primitives = {
