@@ -3,9 +3,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='datatype',
-    version='0.5',
+    version='0.5.1',
     description='Anonymous datatype validation',
-    long_description=open('README.rst').read(),
     packages=find_packages(),
     install_requires=['pytest', 'pytest-cov'],
     author = 'Adam Wagner',
