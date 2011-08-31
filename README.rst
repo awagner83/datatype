@@ -1,32 +1,27 @@
 datatype - Anonymous datatype validation
 ========================================
 
-Example:
+Examples
 --------
+::
 
-```python
+    >>> from datatype.validation import failures
 
->>> from datatype.validation import failures
+    >>> datatype = {'foo': [{'bar': 'int'}]}
+    >>> bad_value = {'foo': [{'bar': 'baz'}], 'bif': 'pow!'}
 
->>> datatype = {'foo': [{'bar': 'int'}]}
->>> bad_value = {'foo': [{'bar': 'baz'}], 'bif': 'pow!'}
+    >>> failures(datatype, bad_value)
+    ['foo[0].bar: expected int, got str', 'unexpected property "bif"']
 
->>> failures(datatype, bad_value)
-['foo[0].bar: expected int, got str', 'unexpected property "bif"']
 
-```
+Wildcard dictionary keys::
 
-Wildcard dictionary keys:
+    >>> datatype = {'_any_': ['int']}
+    >>> good_value = {'foo': [1, 2, 3], 'bar': [3, 4, 5]}
 
-```python
+    >>> failures(datatype, good_value)
+    []
 
->>> datatype = {'_any_': ['int']}
->>> good_value = {'foo': [1, 2, 3], 'bar': [3, 4, 5]}
-
->>> failures(datatype, good_value)
-[]
-
-```
 
 Datatype Definitions
 --------------------
@@ -46,6 +41,7 @@ Required types for proper validation:
 
 Specification
 -------------
+::
 
     DEFINITION = PRIMITIVE | LIST | DICTIONARY
     PRIMITIVE = ["nullable "] + ("int" | "str" | "float" | "bool")
@@ -55,8 +51,9 @@ Specification
     LIST = [DEFINITION]
 
 
-Definition Examples (in python):
---------------------------------
+Definition Examples (in python)
+-------------------------------
+::
 
     definition: "int"
     example value: 5
