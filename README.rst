@@ -48,7 +48,7 @@ Specification
     DICTIONARY = (dictionary of) key: DICTIONARY-KEY, value: DEFINITION
     DICTIONARY-KEY = (["optional "] + DICTIONARY-KEY-NAME) | "_any_"
     DICTIONARY-KEY-NAME = [A-Za-z0-9_]+
-    LIST = (list of) DEFINITION
+    LIST = (list of one) DEFINITION
 
 
 Definition Examples (in python)
