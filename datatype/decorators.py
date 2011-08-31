@@ -45,3 +45,21 @@ def returns(dfn):
         return wrapped_function
     return decorator
 
+
+def returns_iter(dfn):
+    """Validate output of iterator/generator function."""
+    def decorator(fn):
+        add_docs(fn, dfn)
+
+        @wraps(fn)
+        def wrapped_function(*args, **kwargs):
+            for value in fn(*args, **kwargs):
+                fails = failures(dfn, value)
+                if fails:
+                    ex = BadReturnValueError()
+                    ex.failures = fails
+                    raise ex
+                yield value
+        return wrapped_function
+    return decorator
+

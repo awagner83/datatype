@@ -1,6 +1,6 @@
 from pytest import raises
 
-from datatype.decorators import BadReturnValueError, returns
+from datatype.decorators import BadReturnValueError, returns, returns_iter
 
 
 def test_returns():
@@ -30,4 +30,27 @@ def test_returns_function_meta():
 
     assert my_function.__name__ == 'my_function'
     assert my_function.__doc__ == "My Docs\n\nReturn datatype:\n    'int'"
+
+
+def test_returns_iter():
+    @returns_iter('int')
+    def good_function():
+        yield 5
+        yield 6
+
+    # datatype should be transparent (and not consume things too early)
+    iter_result = good_function()
+    assert list(iter_result) == [5, 6]
+
+
+def test_returns_iter():
+    @returns_iter('int')
+    def bad_function():
+        yield 5
+        yield 'foo'
+
+    # exception won't be raised immediately
+    iter_result = bad_function()
+    ex = raises(BadReturnValueError, list, iter_result)
+    assert ex.value.failures == ['expected int, got str']
 
