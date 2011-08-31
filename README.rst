@@ -43,7 +43,7 @@ Specification
 -------------
 ::
 
-    DEFINITION = PRIMITIVE | LIST | DICTIONARY
+    DEFINITION = PRIMITIVE | LIST | DICTIONARY | TUPLE
     PRIMITIVE = ["nullable "] + ("int" | "str" | "float" | "bool")
     DICTIONARY = (dictionary of) key: DICTIONARY-KEY, value: DEFINITION
     DICTIONARY-KEY = (["optional "] + DICTIONARY-KEY-NAME) | "_any_"
