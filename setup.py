@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='datatype',
-    version='0.4.1',
+    version='0.5',
     description='Anonymous datatype validation',
     long_description=open('README.rst').read(),
     packages=find_packages(),
