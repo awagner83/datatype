@@ -45,10 +45,10 @@ Specification
 
     DEFINITION = PRIMITIVE | LIST | DICTIONARY
     PRIMITIVE = ["nullable "] + ("int" | "str" | "float" | "bool")
-    DICTIONARY = {DICTIONARY-KEY: DEFINITION}
+    DICTIONARY = (dictionary of) key: DICTIONARY-KEY, value: DEFINITION
     DICTIONARY-KEY = (["optional "] + DICTIONARY-KEY-NAME) | "_any_"
     DICTIONARY-KEY-NAME = [A-Za-z0-9_]+
-    LIST = [DEFINITION]
+    LIST = (list of) DEFINITION
 
 
 Definition Examples (in python)
