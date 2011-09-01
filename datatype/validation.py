@@ -124,7 +124,7 @@ _primitives = {
     }
 
 def _joinpaths(p1, p2, delim=None):
-    return ''.join((p1, delim, p2)) if delim and p1 else ''.join((p1, p2))
+    return '%s%s%s' % (p1, delim, p2) if delim and p1 else '%s%s' % (p1, p2)
 
 
 def _failure(path, error, *replacements):

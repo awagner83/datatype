@@ -2,7 +2,7 @@
 from pytest import raises
 
 from datatype.validation import (BadDatatypeDefinitionError,
-        failures, is_valid, _parse_dict_key)
+        failures, is_valid, _parse_dict_key, _joinpaths)
 
 
 def test_is_valid_primitive():
@@ -121,4 +121,8 @@ def test_failures_optional():
 
 def test_parse_dict_key():
     assert _parse_dict_key('optional foo') == ('foo', ['optional'])
+
+
+def test__joinpaths():
+    assert _joinpaths(1, 2, '.') == '1.2'
 
