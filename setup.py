@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='datatype',
-    version='0.6.1',
+    version='0.6.2',
     description='Anonymous datatype validation',
     long_description=open('README.rst').read(),
     packages=find_packages(),
-    install_requires=['pytest', 'pytest-cov'],
+    install_requires=['pytest', 'pytest-cov', 'doctools'],
     author = 'Adam Wagner',
     author_email = 'awagner83@gmail.com',
     url = 'https://github.com/LearningStation/datatype',

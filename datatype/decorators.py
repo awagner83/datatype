@@ -1,7 +1,8 @@
 from functools import wraps
 
+from doctools import append_var_to_docs
+
 from datatype.validation import failures
-from datatype.docgen import add_docs
 
 
 class BadReturnValueError(Exception):
@@ -27,7 +28,7 @@ def returns(dfn):
     def decorator(fn):
 
         # Add return-datatype info to function doc-block
-        add_docs(fn, dfn)
+        append_var_to_docs(fn, "Return datatype", dfn)
 
         @wraps(fn)
         def wrapped_function(*args, **kwargs):
@@ -49,7 +50,7 @@ def returns(dfn):
 def returns_iter(dfn):
     """Validate output of iterator/generator function."""
     def decorator(fn):
-        add_docs(fn, dfn)
+        append_var_to_docs(fn, "Return datatype (iterator of)", dfn)
 
         @wraps(fn)
         def wrapped_function(*args, **kwargs):
