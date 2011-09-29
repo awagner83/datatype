@@ -1,3 +1,4 @@
+from collections import defaultdict
 
 from pytest import raises
 
@@ -67,6 +68,13 @@ def test_failures_object_bad_value():
     datatype = {}
     value = 5
     expected = ['expected dict, got int']
+    assert failures(datatype, value) == expected
+
+
+def test_failures_object_defaultdict():
+    datatype = {}
+    value = defaultdict(int)
+    expected = []
     assert failures(datatype, value) == expected
 
 

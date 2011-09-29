@@ -5,6 +5,7 @@ Provides:
     `is_valid`: Returns boolean value representing validity of a value.
 """
 
+from collections import defaultdict
 from functools import partial
 
 
@@ -83,7 +84,7 @@ def failures(datatype, value, path=''):
 def _validate_dictionary(datatype, value, path):
     val_type = type(value)
 
-    if val_type != dict:
+    if val_type not in (dict, defaultdict):
         return [_failure(path, 'expected dict, got %s', val_type.__name__)]
 
     fails = []
