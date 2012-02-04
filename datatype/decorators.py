@@ -13,9 +13,12 @@ class BadReturnValueError(Exception):
     failures = []
 
 
-def returns(dfn):
+def returns(dfn, strict=True):
     """Make decorators to watch return values of functions to ensure
     they match the given datatype definition.
+
+    Optional Arguments:
+        strict: if false, unexpected values will not raise an exception
 
     Example:
         >>> @returns('int')
@@ -37,9 +40,12 @@ def returns(dfn):
             # Check for failure and raise
             fails = failures(dfn, ret)
             if fails:
-                ex = BadReturnValueError()
-                ex.failures = fails
-                raise ex
+                bad_values = [x for x in fails
+                        if 'unexpected property' not in x]
+                if strict or bad_values:
+                    ex = BadReturnValueError()
+                    ex.failures = fails
+                    raise ex
 
             # All is well, return as usual
             return ret
@@ -47,7 +53,7 @@ def returns(dfn):
     return decorator
 
 
-def returns_iter(dfn):
+def returns_iter(dfn, strict=True):
     """Validate output of iterator/generator function."""
     def decorator(fn):
         append_var_to_docs(fn, "Return datatype (iterator of)", dfn)
@@ -57,9 +63,12 @@ def returns_iter(dfn):
             for value in fn(*args, **kwargs):
                 fails = failures(dfn, value)
                 if fails:
-                    ex = BadReturnValueError()
-                    ex.failures = fails
-                    raise ex
+                    bad_values = [x for x in fails
+                            if 'unexpected property' not in x]
+                    if strict or bad_values:
+                        ex = BadReturnValueError()
+                        ex.failures = fails
+                        raise ex
                 yield value
         return wrapped_function
     return decorator
