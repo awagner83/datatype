@@ -7,7 +7,7 @@ setup(
     description='Anonymous datatype validation',
     long_description=open('README.rst').read(),
     packages=find_packages(),
-    install_requires=['pytest', 'pytest-cov', 'doctools'],
+    install_requires=['pytest', 'pytest-cov', 'doctools', 'mock'],
     author = 'Adam Wagner',
     author_email = 'awagner83@gmail.com',
     url = 'https://github.com/LearningStation/datatype',

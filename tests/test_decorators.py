@@ -1,3 +1,4 @@
+from mock import patch
 from pytest import raises
 
 from datatype.decorators import BadReturnValueError, returns, returns_iter
@@ -37,7 +38,9 @@ def test_returns_strict():
     def still_too_much_stuff():
         return val
 
-    assert still_too_much_stuff()
+    with patch('datatype.decorators.logger') as logger_mock:
+        assert still_too_much_stuff()
+        assert logger_mock.warning.called
 
 
 def test_returns_function_meta():
@@ -89,5 +92,7 @@ def test_returns_iter_strict():
     def still_too_much_stuff():
         yield val
 
-    assert list(still_too_much_stuff())
+    with patch('datatype.decorators.logger') as logger_mock:
+        assert list(still_too_much_stuff())
+        assert logger_mock.warning.called
 

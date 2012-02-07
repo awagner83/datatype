@@ -1,3 +1,5 @@
+import logging
+
 from functools import wraps
 
 from doctools import append_var_to_docs
@@ -5,12 +7,15 @@ from doctools import append_var_to_docs
 from datatype.validation import failures
 
 
+logger = logging.getLogger('datatype')
+
 class BadReturnValueError(Exception):
     """Raised when `returns` decorator encounters a return value
     not matching it's given datatype."""
 
-    # List of things that went wrong in validation
-    failures = []
+    def __init__(self, fails=None):
+        # List of things that went wrong in validation
+        self.failures = fails or []
 
 
 def returns(dfn, strict=True):
@@ -40,12 +45,10 @@ def returns(dfn, strict=True):
             # Check for failure and raise
             fails = failures(dfn, ret)
             if fails:
-                bad_values = [x for x in fails
-                        if 'unexpected property' not in x]
-                if strict or bad_values:
-                    ex = BadReturnValueError()
-                    ex.failures = fails
-                    raise ex
+                if strict or _get_bad_values(fails):
+                    raise BadReturnValueError(fails)
+                else:
+                    logger.warning(fails)
 
             # All is well, return as usual
             return ret
@@ -54,7 +57,12 @@ def returns(dfn, strict=True):
 
 
 def returns_iter(dfn, strict=True):
-    """Validate output of iterator/generator function."""
+    """Validate output of iterator/generator function.
+
+    Optional Arguments:
+        strict: if false, unexpected values will not raise an exception
+
+    """
     def decorator(fn):
         append_var_to_docs(fn, "Return datatype (iterator of)", dfn)
 
@@ -63,13 +71,16 @@ def returns_iter(dfn, strict=True):
             for value in fn(*args, **kwargs):
                 fails = failures(dfn, value)
                 if fails:
-                    bad_values = [x for x in fails
-                            if 'unexpected property' not in x]
-                    if strict or bad_values:
-                        ex = BadReturnValueError()
-                        ex.failures = fails
-                        raise ex
+                    if strict or _get_bad_values(fails):
+                        raise BadReturnValueError(fails)
+                    else:
+                        logger.warning(fails)
+
                 yield value
         return wrapped_function
     return decorator
+
+
+def _get_bad_values(fails):
+    return [x for x in fails if 'unexpected property' not in x]
 
