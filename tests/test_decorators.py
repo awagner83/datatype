@@ -1,3 +1,4 @@
+from mock import patch
 from pytest import raises
 
 from datatype.decorators import BadReturnValueError, returns, returns_iter
@@ -22,6 +23,26 @@ def test_returns_failure():
     assert ex.value.failures == ['expected bool, got int']
 
 
+def test_returns_strict():
+    val = {'expected': True, 'spanish inquisition': False}
+
+    @returns({'expected': 'bool'})
+    def too_much_stuff():
+        return val
+
+    ex = raises(BadReturnValueError, too_much_stuff)
+    assert ex
+    assert 'unexpected property' in ex.value.failures[0]
+
+    @returns({'expected': 'bool'}, strict=False)
+    def still_too_much_stuff():
+        return val
+
+    with patch('datatype.decorators.logger') as logger_mock:
+        assert still_too_much_stuff()
+        assert logger_mock.warning.called
+
+
 def test_returns_function_meta():
     @returns('int')
     def my_function():
@@ -43,7 +64,7 @@ def test_returns_iter():
     assert list(iter_result) == [5, 6]
 
 
-def test_returns_iter():
+def test_returns_iter_fail():
     @returns_iter('int')
     def bad_function():
         yield 5
@@ -53,4 +74,25 @@ def test_returns_iter():
     iter_result = bad_function()
     ex = raises(BadReturnValueError, list, iter_result)
     assert ex.value.failures == ['expected int, got str']
+
+
+def test_returns_iter_strict():
+    val = {'expected': True, 'spanish inquisition': False}
+
+    @returns_iter({'expected': 'bool'})
+    def too_much_stuff():
+        yield val
+
+    iter_result = too_much_stuff()
+    ex = raises(BadReturnValueError, list, iter_result)
+    assert ex
+    assert 'unexpected property' in ex.value.failures[0]
+
+    @returns_iter({'expected': 'bool'}, strict=False)
+    def still_too_much_stuff():
+        yield val
+
+    with patch('datatype.decorators.logger') as logger_mock:
+        assert list(still_too_much_stuff())
+        assert logger_mock.warning.called
 
