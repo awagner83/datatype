@@ -1,5 +1,5 @@
-datatype - Anonymous datatype validation
-========================================
+datatype - Anonymous datatype validation and coercion
+=====================================================
 
 Examples
 --------
@@ -11,7 +11,7 @@ Examples
     >>> bad_value = {'foo': [{'bar': 'baz'}], 'bif': 'pow!'}
 
     >>> failures(datatype, bad_value)
-    ['foo[0].bar: expected int, got str', 'unexpected property "bif"']
+    ['unexpected property "bif"', 'foo[0].bar: expected int, got str']
 
 
 Wildcard dictionary keys::
@@ -21,6 +21,14 @@ Wildcard dictionary keys::
 
     >>> failures(datatype, good_value)
     []
+
+
+Coercion::
+
+    >>> from datatype.coercion import coerce_value
+
+    >>> coerce_value(['str'], [1, 2, 3])
+    ['1', '2', '3']
 
 
 Datatype Definitions
@@ -75,7 +83,7 @@ Definition Examples (in python)
 Copyright and License
 ---------------------
 
-Copyright 2011 LearningStation, Inc.
+Copyright 2011-2012 LearningStation, Inc. and Adam Wagner
 
 Licensed under the BSD-3 License.  You may obtain a copy of the License in the
 LICENSE file.

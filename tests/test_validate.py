@@ -2,8 +2,7 @@ from collections import defaultdict
 
 from pytest import raises
 
-from datatype.validation import (BadDatatypeDefinitionError,
-        failures, is_valid, _parse_dict_key, _joinpaths)
+from datatype.validation import (failures, is_valid)
 
 
 def test_is_valid_primitive():
@@ -88,11 +87,6 @@ def test_failures_multiple():
     assert set(failures(datatype, value)) == expected
 
 
-def test_failures_bad_definition():
-    datatype = None
-    assert raises(BadDatatypeDefinitionError, failures, datatype, None)
-
-
 def test_failures_list():
     datatype = ['str']
     assert failures(datatype, ['foo', 'bar', 'baz']) == []
@@ -125,12 +119,4 @@ def test_failures_optional():
 
     assert failures(datatype, good_value) == []
     assert failures(datatype, bad_value) == ['bar: expected int, got str']
-
-
-def test_parse_dict_key():
-    assert _parse_dict_key('optional foo') == ('foo', ['optional'])
-
-
-def test__joinpaths():
-    assert _joinpaths(1, 2, '.') == '1.2'
 
