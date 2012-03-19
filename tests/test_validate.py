@@ -14,6 +14,11 @@ def test_is_valid_object():
     assert is_valid(datatype, {"foo": 5})
 
 
+def test_is_valid_object_funny_name():
+    datatype = {'no': 'int'}
+    assert is_valid(datatype, {'no': 3})
+
+
 def test_failures_primitive():
     assert failures('int', '5') == ['expected int, got str']
 

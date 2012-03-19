@@ -68,12 +68,14 @@ def validate_step(datatype, value, options):
         if vtype not in (defaultdict, dict):
             return ['expected dict, got %s' % vtype.__name__]
 
-        all_keys = (k.lstrip('optional ') for k in datatype)
+        optional = lambda x: x.startswith('optional ')
+        all_keys = (k.replace('optional ', '', 1) if optional(k) else k
+               for k in datatype)
         required_keys = (k for k in datatype
-                         if not (k.startswith('optional') or k == '_any_'))
+               if not (optional(k) or k == '_any_'))
 
         failures = ['missing required property: "%s"' % k
-                    for k in set(required_keys) - set(value.iterkeys())]
+                    for k in set(required_keys) - set(value)]
 
         if '_any_' not in datatype:
             failures += ['unexpected property "%s"' % k
