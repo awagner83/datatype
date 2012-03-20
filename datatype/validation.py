@@ -1,9 +1,4 @@
-"""Datatype validation module.
-
-Provides:
-    `failures`: Returns list of a values validation failures.
-    `is_valid`: Returns boolean value representing validity of a value.
-"""
+"""Datatype validation."""
 
 __all__ = ['failures', 'is_valid']
 
@@ -18,7 +13,7 @@ def is_valid(datatype, value):
 
 
 def failures(datatype, value):
-    """Return list of failures (if any) validating `value` again `datatype`.
+    """Return list of failures (if any) validating `value` against `datatype`.
 
     Params:
         `datatype`: Datatype to validate value against.  See README.markdown

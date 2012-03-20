@@ -20,8 +20,8 @@ def coerce_value(datatype, value):
     """Attempt to coerce value to requested datatype.
 
     Example:
-    >>> coerce_value("int", "5")
-    5
+        >>> coerce_value("int", "5")
+        5
     """
     return walk(datatype, value, coerce_step)
 

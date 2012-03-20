@@ -23,7 +23,8 @@ def returns(dfn, strict=True):
     they match the given datatype definition.
 
     Optional Arguments:
-        strict: if false, unexpected values will not raise an exception
+        strict: if false, unexpected values on dictionaries will not raise an
+        exception
 
     Example:
         >>> @returns('int')
@@ -59,9 +60,20 @@ def returns(dfn, strict=True):
 def returns_iter(dfn, strict=True):
     """Validate output of iterator/generator function.
 
-    Optional Arguments:
-        strict: if false, unexpected values will not raise an exception
+    Note: exceptions for bad return datatypes will not be raised until the bad
+    value of the iterator is consumed.
 
+    Optional Arguments:
+        strict: if false, unexpected values on dictionaries will not raise an
+        exception
+
+    Example:
+        >>> @returns_iter('str')
+        ... def myfunction():
+        ...     for x in range(3):
+        ...         yield "number %s" % x
+        >>> list(myfunction())  # no error
+        ["number 1", "number 2", "number 3"]
     """
     def decorator(fn):
         append_var_to_docs(fn, "Return datatype (iterator of)", dfn)
