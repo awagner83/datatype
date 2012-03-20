@@ -73,7 +73,7 @@ def returns_iter(dfn, strict=True):
         ...     for x in range(3):
         ...         yield "number %s" % x
         >>> list(myfunction())  # no error
-        ["number 1", "number 2", "number 3"]
+        ['number 0', 'number 1', 'number 2']
     """
     def decorator(fn):
         append_var_to_docs(fn, "Return datatype (iterator of)", dfn)
