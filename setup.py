@@ -10,7 +10,7 @@ setup(
     install_requires=['pytest', 'pytest-cov', 'doctools', 'mock'],
     author = 'Adam Wagner',
     author_email = 'awagner83@gmail.com',
-    url = 'https://github.com/LearningStation/datatype',
+    url = 'https://github.com/awagner83/datatype',
     license = 'BSD3',
     classifiers=[
         'Development Status :: 4 - Beta',
