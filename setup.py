@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='datatype',
     version='0.8.5',
-    description='Anonymous datatype validation',
+    description='Anonymous datatype validation and coercion',
     long_description=open('README.rst').read(),
     packages=find_packages(),
     install_requires=['pytest', 'pytest-cov', 'doctools', 'mock'],
