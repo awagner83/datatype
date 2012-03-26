@@ -8,6 +8,7 @@ from datatype.validation import (failures, is_valid, validate_step)
 
 def test_is_valid_primitive():
     assert is_valid("int", 5)
+    assert not is_valid("int", True)
 
 
 def test_is_valid_object():

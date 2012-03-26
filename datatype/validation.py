@@ -47,7 +47,7 @@ def validate_step(datatype, value, options):
 
     # primitives
     elif dtype == str:
-        if not isinstance(value, primitives[datatype]):
+        if not any(type(value) is x for x in primitives[datatype]):
             return ['expected %s, got %s' % (datatype, vtype.__name__)]
 
     # lists & tuples
