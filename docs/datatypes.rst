@@ -87,18 +87,18 @@ Choices
 -------
 
 To give an option between several datatypes, the choice type can be used.  A
-choice is defined as a special type of dictionary, and is defined like this::
+choice is defined as a special type of dictionary::
 
     {'_type_': 'choice', 'choices': ['int', 'str']}
 
 This type allows for either an integer or a string.
 
-Choices can be used anywhere other types can be used, and can also be used to
-create things like heterogeneous lists::
+Choices can be used anywhere other types can be used.  This type, for example,
+represents a heterogeneous list of integers and booleans::
 
     [{'_type_': 'choice', 'choices': ['int', 'bool']}]
 
-This type, for instance, allows for values like the following::
+The following are all valid values of this type::
 
     [5, True, False]
     [1, 2, 3]
