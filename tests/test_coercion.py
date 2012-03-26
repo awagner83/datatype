@@ -11,3 +11,9 @@ def test_coerce_failure():
     assert coerce_value('int', 'foo') == 'foo'
     assert coerce_value(['int'], ['1', 2, 'foo']) == [1, 2, 'foo']
 
+
+def test_coerce_choice():
+    datatype = {'_type_': 'choice', 'choices': ['int', 'bool']}
+    assert coerce_value(datatype, 'a') == True
+    assert coerce_value(datatype, '1') == 1
+

@@ -9,9 +9,34 @@ class NewValue(object):
     """Returned from walk-callback when we want to replace the value."""
 
     __slots__ = ('value',)
-    
+
     def __init__(self, value):
         self.value = value
+
+
+class Choice(object):
+    """Datatype representing a choice between multiple datatypes."""
+
+    def __init__(self, choices):
+        self.choices = choices
+
+    def __iter__(self):
+        return iter(self.choices)
+
+    def __eq__(self, other):
+        return isinstance(other, Choice) and self.choices == other.choices
+
+    def __repr__(self):
+        return '<Choice of %s>' % self.choices
+
+    def __str__(self):
+        if len(self.choices) < 3:
+            return ' or '.join(self.choices)
+        else:
+            return '%s, or %s' % (
+                    ', '.join(self.choices[:-1]),
+                    self.choices[-1]
+                )
 
 
 def dict_datatypes(datatype):
@@ -36,6 +61,10 @@ def walk(datatype, value, callback, path='', options=None):
     if isinstance(datatype, str):
         datatype, parsed_options = parse_primitive(datatype)
         options += parsed_options
+
+    # Transform special types:
+    if is_choice(datatype):
+        datatype = Choice(datatype.get('choices'))
 
     new_value = callback(path, datatype, value, options)
 
@@ -68,6 +97,18 @@ def walk(datatype, value, callback, path='', options=None):
 
 def are_type(type_, *vars_):
     return all(isinstance(v, type_) for v in vars_)
+
+
+def is_choice(datatype):
+    return datatype_type(datatype) == 'choice'
+
+
+def datatype_type(datatype):
+    default = 'type'
+    if isinstance(datatype, dict):
+        return datatype.get('_type_', default)
+    else:
+        return default
 
 
 def joinpaths(p1, p2, delim=None):

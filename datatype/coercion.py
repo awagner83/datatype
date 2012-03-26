@@ -6,7 +6,7 @@ Provides:
 
 __all__ = ['coerce_value']
 
-from datatype.tools import NewValue, walk
+from datatype.tools import Choice, NewValue, walk
 from datatype.validation import primitives
 
 
@@ -33,7 +33,15 @@ def coerce_value(datatype, value):
 
 
 def coerce_step(_, datatype, value, __):
-    if type(datatype) == str and type(value) in coercable_types:
+    dt_type = type(datatype)
+
+    if dt_type is Choice:
+        for choice in datatype:
+            new_value = coerce_step(None, choice, value, None)
+            if new_value:
+                return new_value
+
+    elif dt_type == str and type(value) in coercable_types:
         try:
             return NewValue(coerce_to[datatype](value))
         except (TypeError, ValueError):

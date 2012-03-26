@@ -2,7 +2,8 @@ from collections import defaultdict
 
 from pytest import raises
 
-from datatype.validation import (failures, is_valid)
+from datatype.tools import Choice
+from datatype.validation import (failures, is_valid, validate_step)
 
 
 def test_is_valid_primitive():
@@ -124,4 +125,15 @@ def test_failures_optional():
 
     assert failures(datatype, good_value) == []
     assert failures(datatype, bad_value) == ['bar: expected int, got str']
+
+
+def test_failures_choice():
+    datatype = {
+            '_type_': 'choice',
+            'choices': ['int', 'str']
+        }
+
+    assert failures(datatype, 5) == []
+    assert failures(datatype, 'foo') == []
+    assert failures(datatype, {}) == ['{} is none of expected int or str']
 

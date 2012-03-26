@@ -4,7 +4,7 @@ __all__ = ['failures', 'is_valid']
 
 from collections import defaultdict
 
-from datatype.tools import walk
+from datatype.tools import Choice, walk
 
 
 def is_valid(datatype, value):
@@ -77,6 +77,11 @@ def validate_step(datatype, value, options):
                          for k in set(value) - set(all_keys)]
 
         return failures
+
+    # choice datatypes
+    elif isinstance(datatype, Choice):
+        if not any(is_valid(x, value) for x in datatype):
+            return ['%s is none of expected %s' % (value, datatype)]
 
 
 primitives = {

@@ -41,7 +41,7 @@ Example::
 
 Represents a list of ints.  While::
 
-    [{'height': float, 'width': float}]
+    [{'height': 'float', 'width': 'float'}]
 
 Represents a list of dictionaries (or "objects").
 
@@ -81,4 +81,26 @@ Arbitrary properties are supported when the wild-card key "_any_" is defined on
 the dictionary::
 
     {'_any_': 'str'}
+
+
+Choices
+-------
+
+To give an option between several datatypes, the choice type can be used.  A
+choice is defined as a special type of dictionary, and is defined like this::
+
+    {'_type_': 'choice', 'choices': ['int', 'str']}
+
+This type allows for either an integer or a string.
+
+Choices can be used anywhere other types can be used, and can also be used to
+create things like heterogeneous lists::
+
+    [{'_type_': 'choice', 'choices': ['int', 'bool']}]
+
+This type, for instance, allows for values like the following::
+
+    [5, True, False]
+    [1, 2, 3]
+    [False]
 
