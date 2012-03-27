@@ -108,7 +108,7 @@ The following are all valid values of this type::
 Named/Recursive Types
 ---------------------
 
-Recursive types require two special types: *named* and *reference*::
+Recursion requires the use of two special types: *named* and *reference*::
 
     {'_type_': 'named', 'name': 'mytype', 'value': {'foo': 'bar'}}
 
