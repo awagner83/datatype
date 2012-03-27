@@ -4,6 +4,8 @@ from collections import defaultdict
 from functools import partial
 from itertools import count
 
+from datatype.language import typename
+
 
 class NewValue(object):
     """Returned from walk-callback when we want to replace the value."""
@@ -59,7 +61,7 @@ def extract_named_types(datatype):
     datatype."""
     named_types = {}
 
-    if datatype_type(datatype) == 'named':
+    if typename(datatype) == 'named':
         named_types[datatype['name']] = datatype['value']
         datatype = datatype['value']
 
@@ -90,7 +92,7 @@ def walk(datatype, value, callback):
             options += parsed_options
 
         # Transform special types:
-        dt_type = datatype_type(datatype)
+        dt_type = typename(datatype)
         if dt_type == 'choice':
             datatype = Choice(datatype.get('choices'))
         elif dt_type == 'reference':
@@ -128,14 +130,6 @@ def walk(datatype, value, callback):
 
 def are_type(type_, *vars_):
     return all(isinstance(v, type_) for v in vars_)
-
-
-def datatype_type(datatype):
-    default = 'type'
-    if isinstance(datatype, dict):
-        return datatype.get('_type_', default)
-    else:
-        return default
 
 
 def joinpaths(p1, p2, delim=None):

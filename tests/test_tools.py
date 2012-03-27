@@ -2,7 +2,7 @@
 
 from mock import Mock, call
 
-from datatype.tools import (Choice, datatype_type, extract_named_types, walk)
+from datatype.tools import (Choice, extract_named_types, walk)
 
 
 # walk_test_data :: [(datatype, value, callback_call_args_list)]
@@ -112,12 +112,4 @@ def test_choice_obj():
     assert list(Choice([1, 2, 3])) == [1, 2, 3]
     assert Choice([1]) == Choice([1])
     assert Choice([1]) != Choice([2])
-
-
-def test_datatype_type():
-    assert datatype_type('int') == 'type'
-    assert datatype_type({'_type_': 'choice'}) == 'choice'
-    assert datatype_type({'_type_': 'foo'}) == 'foo'
-    assert datatype_type({}) == 'type'
-    assert datatype_type([]) == 'type'
 
