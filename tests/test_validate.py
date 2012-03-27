@@ -138,3 +138,44 @@ def test_failures_choice():
     assert failures(datatype, 'foo') == []
     assert failures(datatype, {}) == ['{} is none of expected int or str']
 
+
+def test_failures_recursive():
+    datatype = {
+            '_type_': 'named',
+            'name': 'person',
+            'value': {
+                'name': 'str',
+                'children': [{'_type_': 'reference', 'name': 'person'}]
+            }
+        }
+
+    good_value = {
+            'name': 'bob',
+            'children': [
+                {
+                    'name': 'frank',
+                    'children': []
+                },
+                {
+                    'name': 'jane',
+                    'children': [
+                        {'name': 'alfred', 'children': []}
+                    ]
+                }
+            ]
+        }
+    assert failures(datatype, good_value) == []
+
+    bad_value = {}
+    assert failures(datatype, bad_value) == [
+            'missing required property: "name"',
+            'missing required property: "children"']
+
+    bad_value2 = {
+            'name': 'fred',
+            'children': [{'name': 'jim'}]
+        }
+    assert failures(datatype, bad_value2) == [
+            'children[0]: missing required property: "children"'
+        ]
+

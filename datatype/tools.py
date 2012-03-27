@@ -53,54 +53,81 @@ def dict_datatypes(datatype):
     return datatypes
 
 
-def walk(datatype, value, callback, path='', options=None):
+def extract_named_types(datatype):
+    """Walks the given datatype, removes the named-wrappers from around the
+    types and returns a dictionary of names -> types as well as the cleaned
+    datatype."""
+    named_types = {}
+
+    if datatype_type(datatype) == 'named':
+        named_types[datatype['name']] = datatype['value']
+        datatype = datatype['value']
+
+    dt_type = type(datatype)
+    if dt_type in (list, dict):
+        generators = {
+                list: lambda: enumerate(datatype),
+                dict: lambda: datatype.iteritems(),
+            }
+        for key, subtype in generators[dt_type]():
+            sub_named_types, subtype = extract_named_types(subtype)
+            named_types.update(sub_named_types)
+            datatype[key] = subtype
+
+    return named_types, datatype
+
+
+def walk(datatype, value, callback):
     """Walk the value and datatype with the given callback.
 
     Example callback: lambda path, datatype, actual, options: None"""
-    options = options or []
-    if isinstance(datatype, str):
-        datatype, parsed_options = parse_primitive(datatype)
-        options += parsed_options
+    named_types, datatype = extract_named_types(datatype)
 
-    # Transform special types:
-    if is_choice(datatype):
-        datatype = Choice(datatype.get('choices'))
+    def _walk(datatype, value, callback, path='', options=None):
+        options = options or []
+        if isinstance(datatype, str):
+            datatype, parsed_options = parse_primitive(datatype)
+            options += parsed_options
 
-    new_value = callback(path, datatype, value, options)
+        # Transform special types:
+        dt_type = datatype_type(datatype)
+        if dt_type == 'choice':
+            datatype = Choice(datatype.get('choices'))
+        elif dt_type == 'reference':
+            datatype = named_types[datatype['name']]
 
-    # Are we replacing the value?
-    if isinstance(new_value, NewValue):
-        value = new_value.value
+        new_value = callback(path, datatype, value, options)
 
-    # Walk lists and tuples
-    if are_type(list, datatype, value):
-        dt_len = len(datatype)
-        mk_path = lambda i: joinpaths(path, '[%d]' % i)
+        # Are we replacing the value?
+        if isinstance(new_value, NewValue):
+            value = new_value.value
 
-        if dt_len == 1:   # list of `a`
-            value = [walk(datatype[0], v, callback, mk_path(i))
-                     for i, v in enumerate(value)]
-        elif dt_len > 1:  # tuple
-            value = [walk(d, v, callback, mk_path(i))
-                     for i, d, v in zip(count(), datatype, value)]
+        # Walk lists and tuples
+        if are_type(list, datatype, value):
+            dt_len = len(datatype)
+            mk_path = lambda i: joinpaths(path, '[%d]' % i)
 
-    # Walk objects (dictionaries)
-    elif are_type(dict, datatype, value):
-        key_dts = dict_datatypes(datatype)
-        mk_path = lambda k: joinpaths(path, k, '.')
+            if dt_len == 1:   # list of `a`
+                value = [_walk(datatype[0], v, callback, mk_path(i))
+                         for i, v in enumerate(value)]
+            elif dt_len > 1:  # tuple
+                value = [_walk(d, v, callback, mk_path(i))
+                         for i, d, v in zip(count(), datatype, value)]
 
-        value = dict((k, walk(key_dts[k], v, callback, mk_path(k)))
-            for k, v in value.iteritems())
+        # Walk objects (dictionaries)
+        elif are_type(dict, datatype, value):
+            key_dts = dict_datatypes(datatype)
+            mk_path = lambda k: joinpaths(path, k, '.')
 
-    return value
+            value = dict((k, _walk(key_dts[k], v, callback, mk_path(k)))
+                for k, v in value.iteritems())
+
+        return value
+    return _walk(datatype, value, callback)
 
 
 def are_type(type_, *vars_):
     return all(isinstance(v, type_) for v in vars_)
-
-
-def is_choice(datatype):
-    return datatype_type(datatype) == 'choice'
 
 
 def datatype_type(datatype):

@@ -104,3 +104,46 @@ The following are all valid values of this type::
     [1, 2, 3]
     [False]
 
+
+Named/Recursive Types
+---------------------
+
+Recursive types require two special types: *named* and *reference*::
+
+    {'_type_': 'named', 'name': 'mytype', 'value': {'foo': 'bar'}}
+
+    {'_type_': 'reference', 'name': 'mytype'}
+
+The named type does nothing more than provide a name to a datatype.  The
+reference type, then, is used to refer to this named type a later point for
+things like recursion.  Here's a complete example::
+
+    {
+        '_type_': 'named',
+        'name': 'person',
+        'value': {
+            'name': 'str',
+            'children': [{'_type_': 'reference', 'name': 'person'}]
+        }
+    }
+
+This type represents a person who can have a list of children, each of which,
+can have their own children, etc.  The following is a valid value of this
+type::
+
+    {
+        'name': 'bob',
+        'children': [
+            {
+                'name': 'frank',
+                'children': []
+            },
+            {
+                'name': 'jane',
+                'children': [
+                    {'name': 'alfred', 'children': []}
+                ]
+            }
+        ]
+    }
+

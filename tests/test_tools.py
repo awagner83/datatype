@@ -2,7 +2,7 @@
 
 from mock import Mock, call
 
-from datatype.tools import (Choice, is_choice, datatype_type, walk)
+from datatype.tools import (Choice, datatype_type, extract_named_types, walk)
 
 
 # walk_test_data :: [(datatype, value, callback_call_args_list)]
@@ -61,9 +61,31 @@ walk_test_data = [
     ]
 
 
+extract_named_types_data = [
+        (   # unnamed primitive
+            'str', {}, 'str'
+        ),
+        (   # named primitive
+            {'_type_': 'named', 'name': 'foo', 'value': 'str'},
+            {'foo': 'str'}, 'str'
+        ),
+        (   # named in list
+            [{'_type_': 'named', 'name': 'bar', 'value': 'int'}],
+            {'bar': 'int'}, ['int']
+        ),
+        (   # named nested in named
+            {'_type_': 'named', 'name': 'foo', 'value': {
+                'bar': {'_type_': 'named', 'name': 'baz', 'value': 'bool'}}},
+            {'foo': {'bar': 'bool'}, 'baz': 'bool'}, {'bar': 'bool'}
+        )
+    ]
+
+
 def pytest_generate_tests(metafunc):
     if "walk_test" in metafunc.funcargnames:
         metafunc.parametrize("walk_test", walk_test_data)
+    if "extract_types_test" in metafunc.funcargnames:
+        metafunc.parametrize("extract_types_test", extract_named_types_data)
 
 
 def test_walk(walk_test):
@@ -75,6 +97,14 @@ def test_walk(walk_test):
     assert result == actual
 
 
+def test_extract_named_types(extract_types_test):
+    datatype, named_dict, refined_type = extract_types_test
+
+    actual_named_dict, actual_refined = extract_named_types(datatype)
+    assert actual_named_dict == named_dict
+    assert actual_refined == refined_type
+
+
 def test_choice_obj():
     assert str(Choice(['str', 'int'])) == 'str or int'
     assert str(Choice(['str', 'int', 'bool'])) == 'str, int, or bool'
@@ -82,13 +112,6 @@ def test_choice_obj():
     assert list(Choice([1, 2, 3])) == [1, 2, 3]
     assert Choice([1]) == Choice([1])
     assert Choice([1]) != Choice([2])
-
-
-def test_is_choice():
-    assert is_choice({'_type_': 'choice'}) == True
-    assert is_choice('str') == False
-    assert is_choice([]) == False
-    assert is_choice({}) == False
 
 
 def test_datatype_type():
