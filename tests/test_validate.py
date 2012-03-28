@@ -179,3 +179,9 @@ def test_failures_recursive():
             'children[0]: missing required property: "children"'
         ]
 
+
+def test_failures_literal():
+    datatype = {'_type_': 'literal', 'value': 'foo'}
+    assert failures(datatype, 'bar') == [
+        'expected literal value "foo", got "bar"']
+

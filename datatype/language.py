@@ -45,3 +45,13 @@ def reference(name):
     """
     return special_type('reference', name=name)
 
+
+def literal(value):
+    """Returns a 'literal' dictionary.
+
+    Example:
+        >>> literal('foo')
+        {'_type_': 'literal', 'value': 'foo'}
+    """
+    return special_type('literal', value=value)
+

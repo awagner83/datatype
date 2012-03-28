@@ -1,6 +1,6 @@
 """Tests for language module."""
 
-from datatype.language import typename, choice, named, reference
+from datatype.language import typename, choice, named, reference, literal
 
 
 def test_typename():
@@ -23,4 +23,8 @@ def test_named():
 
 def test_reference():
     assert reference('foo') == {'_type_': 'reference', 'name': 'foo'}
+
+
+def test_literal():
+    assert literal('str') == {'_type_': 'literal', 'value': 'str'}
 

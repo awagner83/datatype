@@ -41,6 +41,13 @@ class Choice(object):
                 )
 
 
+class Literal(object):
+    """Object representing a literal value."""
+
+    def __init__(self, value):
+        self.value = value
+
+
 def dict_datatypes(datatype):
     default = datatype.get('_any_')
     datatypes = defaultdict(lambda: default)
@@ -97,6 +104,8 @@ def walk(datatype, value, callback):
             datatype = Choice(datatype.get('choices'))
         elif dt_type == 'reference':
             datatype = named_types[datatype['name']]
+        elif dt_type == 'literal':
+            datatype = Literal(datatype.get('value'))
 
         new_value = callback(path, datatype, value, options)
 

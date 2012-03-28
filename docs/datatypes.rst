@@ -83,6 +83,18 @@ the dictionary::
     {'_any_': 'str'}
 
 
+Literals
+--------
+
+The 'literal' type can be used to require a specific value::
+
+    {'_type_': 'literal', 'value': 'my_literal_value'}
+
+This value, and only this value, is a valid value for this datatype::
+
+    'my_literal_value'
+
+
 Choices
 -------
 
